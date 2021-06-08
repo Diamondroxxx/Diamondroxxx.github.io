@@ -2,6 +2,13 @@ body {
     background: url(/img/bg.png) repeat 0 0;
     color: aliceblue;
   }
-  #nav-dropdown > .dropdown-menu li > a{
-    background-color: rgba(255, 255, 255, 0.3);
+  #nav-dropdown > .dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  #nav-dropdown > .dropdown-menu > li > a {
+    color: aliceblue;
+  }
+  #nav-dropdown > .dropdown-menu > li > a:hover {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.75);
   }
