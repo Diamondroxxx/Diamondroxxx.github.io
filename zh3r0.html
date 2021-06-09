@@ -36,10 +36,12 @@
             <h1>zh3r0 CTF</h1>
             <p>This was my first proper CTF, and it was a very fun experience. I was able to solve two challenges and learnt a lot in the process.</p>
             <hr/>
+
             <h2>Twist And Shout</h2>
             <img src="img/Twist_and_shout.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
-            <div>
-                <pre style="background-color: transparent; border-color: transparent;"><code>from secret import flag
+            <figure class="figure">
+                <div>
+                    <pre id="code-block"><code>from secret import flag
 import os  
 import random
                         
@@ -51,6 +53,80 @@ state = tuple( int.from_bytes(state_bytes[i:i+4],&#39;big&#39;) for i in range(0
 random.setstate((3,state+(624,),None))
 outputs = [random.getrandbits(32) for i in range(624)]
 print(*outputs,sep=&#39;\n&#39;)</code></pre>
+                </div>
+                <figcaption class="figure-caption"><em>challenge.py, the source code provided</em></figcaption>
+            </figure>
+
+            <h3>The Goal</h3><hr/>
+            <p>Looking at the code, we can see that after some intial padding, the flag is used as the "state" for the random number generation. Therefore, if we are able to recover the state used to generate the numbers provided in output, we will have recovered the flag.</p>
+            <p>The main vulnerability in this is the provision of 624 consecutive bytes created by the <code id="inline-code">random.getrandbits()</code> method. To understand why, we must first understand the algorithm used by Python's random library, the Mersenne Twister. </p>
+
+            <h3>Mersenne Twister</h3><hr/>
+            <p>The standardised version of Mersenne Twister used by Python is MT19937, which gets its name from its period (the number of numbers the algorithm generates before it loops) which is the Mersenne Prime 2<sup>19937</sup> - 1. However, this does not mean we need 2<sup>19937</sup> - 1 consecutive values to reverse the algorithm.</p>
+            <p>The algorithm stores an array of integers (this can be accessed by <code id="inline-code">random.getstate()</code>) and dispenses them one by one as requested. This number alone would not be random enough however, and thus an additional step called tempering is applied. In the case of MT19937, the array stores 624 32-bit integers. Once the array is exhausted, a new array is then created based on the old state. This step is called twisting.</p>
+            <p>The first part we must undo is tempering.</p>
+
+            <p></p>
+            <h4>Tempering</h4>
+            <p>The tempering process needs to be quick and easy for a computer to perform and thus is done using a series of bitwise operations.</p>
+            <figure class="figure">
+                <div>
+                    <pre id="code-block"><code>def temper(y):
+y ^= y &gt;&gt; 11
+y ^= (y &lt;&lt; 7) &amp; 0x9D2C5680
+y ^= (y &lt;&lt; 15) &amp; 0xEFC60000
+y ^= y &gt;&gt; 18
+return y &amp; 0xFFFFFFFF</code></pre>
+                </div>
+                <figcaption class="figure-caption"><em>Tempering in Python code</em></figcaption>
+            </figure>
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#tempering-example">Click here for a more in depth explanation!</button>
+            <div id="tempering-example" class="collapse">
+                <p>Let <code id="inline-code">y = 11011110101011011011111011101111</code>.</p>
+
+                <h5>Step 1:</h5>
+                <p>In the first step we do a bitwise xor on <code id="inline-code">y</code> and <code id="inline-code">y &gt;&gt; 11</code></p>
+                <div>
+                    <pre id="code-block"><code>11011110101011011011111011101111 XOR
+00000000000110111101010110110111 
+=
+11011110101101100110101101011000</code></pre>
+                </div>
+
+                <h4>Step 2:</h4>
+                <p>In step 2, <code id="inline-code">y</code> is bit shifted to the left, and then a bitwise and is performed with <code id="inline-code">0x9D2C5680</code>. This is then xored with the previous value of <code id="inline-code">y</code>.</p>
+                <div>
+                    <pre id="code-block"><code>01011011001101011010110000000000 AND
+10011101001011000101011010000000
+=
+00011001001001000000010000000000 XOR
+11011110101101100110101101011000
+=
+11000111100100100110111101011000</code></pre>
+                </div>
+
+                <h4>Step 3:</h4>
+                <p>This step is similar to step 2, but with different values.</p>
+                <div>
+                    <pre id="code-block"><code>00110111101011000000000000000000 AND
+11101111110001100000000000000000
+=
+00100111100001000000000000000000 XOR
+01001111101111100010101101011000
+=
+11100000000101100110111101011000</code></pre>
+                </div>
+
+                <h4>Step 4:</h4>
+                <p>This step is similar to step 1, but with different values. </p>
+                <div>
+                    <pre id="code-block"><code>11100000000101100110111101011000 XOR
+00000000000000000011100000000101
+=
+11100000000101100101011101011101</code></pre>
+                </div>
+
+                <p>Which is our tempered value of <code id="inline-code">y</code>,<br> <code id="inline-code">y_tempered = 11100000000101100101011101011101</code></p>
             </div>
         </div>
     </body>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>TwistWriteUp</title>
+
+
+<style type="text/css">
+body {
+  font-family: Helvetica, arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: white;
+  padding: 30px; }
+
+body > *:first-child {
+  margin-top: 0 !important; }
+body > *:last-child {
+  margin-bottom: 0 !important; }
+
+a {
+  color: #4183C4; }
+a.absent {
+  color: #cc0000; }
+a.anchor {
+  display: block;
+  padding-left: 30px;
+  margin-left: -30px;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  cursor: text;
+  position: relative; }
+
+h1:hover a.anchor, h2:hover a.anchor, h3:hover a.anchor, h4:hover a.anchor, h5:hover a.anchor, h6:hover a.anchor {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA09pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUM2NjlDQjI4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OUM2NjlDQjM4ODBGMTFFMTg1ODlEODNERDJBRjUwQTQiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo5QzY2OUNCMDg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo5QzY2OUNCMTg4MEYxMUUxODU4OUQ4M0REMkFGNTBBNCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsQhXeAAAABfSURBVHjaYvz//z8DJYCRUgMYQAbAMBQIAvEqkBQWXI6sHqwHiwG70TTBxGaiWwjCTGgOUgJiF1J8wMRAIUA34B4Q76HUBelAfJYSA0CuMIEaRP8wGIkGMA54bgQIMACAmkXJi0hKJQAAAABJRU5ErkJggg==) no-repeat 10px center;
+  text-decoration: none; }
+
+h1 tt, h1 code {
+  font-size: inherit; }
+
+h2 tt, h2 code {
+  font-size: inherit; }
+
+h3 tt, h3 code {
+  font-size: inherit; }
+
+h4 tt, h4 code {
+  font-size: inherit; }
+
+h5 tt, h5 code {
+  font-size: inherit; }
+
+h6 tt, h6 code {
+  font-size: inherit; }
+
+h1 {
+  font-size: 28px;
+  color: black; }
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #cccccc;
+  color: black; }
+
+h3 {
+  font-size: 18px; }
+
+h4 {
+  font-size: 16px; }
+
+h5 {
+  font-size: 14px; }
+
+h6 {
+  color: #777777;
+  font-size: 14px; }
+
+p, blockquote, ul, ol, dl, li, table, pre {
+  margin: 15px 0; }
+
+hr {
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC) repeat-x 0 0;
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0;
+}
+
+body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+body > h1:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+  body > h1:first-child + h2 {
+    margin-top: 0;
+    padding-top: 0; }
+body > h3:first-child, body > h4:first-child, body > h5:first-child, body > h6:first-child {
+  margin-top: 0;
+  padding-top: 0; }
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0; }
+
+h1 p, h2 p, h3 p, h4 p, h5 p, h6 p {
+  margin-top: 0; }
+
+li p.first {
+  display: inline-block; }
+li {
+  margin: 0; }
+ul, ol {
+  padding-left: 30px; }
+
+ul :first-child, ol :first-child {
+  margin-top: 0; }
+
+dl {
+  padding: 0; }
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px; }
+    dl dt:first-child {
+      padding: 0; }
+    dl dt > :first-child {
+      margin-top: 0; }
+    dl dt > :last-child {
+      margin-bottom: 0; }
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px; }
+    dl dd > :first-child {
+      margin-top: 0; }
+    dl dd > :last-child {
+      margin-bottom: 0; }
+
+blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777; }
+  blockquote > :first-child {
+    margin-top: 0; }
+  blockquote > :last-child {
+    margin-bottom: 0; }
+
+table {
+  padding: 0;border-collapse: collapse; }
+  table tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0; }
+    table tr:nth-child(2n) {
+      background-color: #f8f8f8; }
+    table tr th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr td {
+      border: 1px solid #cccccc;
+      margin: 0;
+      padding: 6px 13px; }
+    table tr th :first-child, table tr td :first-child {
+      margin-top: 0; }
+    table tr th :last-child, table tr td :last-child {
+      margin-bottom: 0; }
+
+img {
+  max-width: 100%; }
+
+span.frame {
+  display: block;
+  overflow: hidden; }
+  span.frame > span {
+    border: 1px solid #dddddd;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 13px 0 0;
+    padding: 7px;
+    width: auto; }
+  span.frame span img {
+    display: block;
+    float: left; }
+  span.frame span span {
+    clear: both;
+    color: #333333;
+    display: block;
+    padding: 5px 0 0; }
+span.align-center {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-center > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: center; }
+  span.align-center span img {
+    margin: 0 auto;
+    text-align: center; }
+span.align-right {
+  display: block;
+  overflow: hidden;
+  clear: both; }
+  span.align-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px 0 0;
+    text-align: right; }
+  span.align-right span img {
+    margin: 0;
+    text-align: right; }
+span.float-left {
+  display: block;
+  margin-right: 13px;
+  overflow: hidden;
+  float: left; }
+  span.float-left span {
+    margin: 13px 0 0; }
+span.float-right {
+  display: block;
+  margin-left: 13px;
+  overflow: hidden;
+  float: right; }
+  span.float-right > span {
+    display: block;
+    overflow: hidden;
+    margin: 13px auto 0;
+    text-align: right; }
+
+code, tt {
+  margin: 0 2px;
+  padding: 0 5px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px; }
+
+pre code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent; }
+
+.highlight pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #cccccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px; }
+  pre code, pre tt {
+    background-color: transparent;
+    border: none; }
+
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb
+}
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:0 auto;
+    }
+}
+@media print {
+	table, pre {
+		page-break-inside: avoid;
+	}
+	pre {
+		word-wrap: break-word;
+	}
+  body {
+    padding: 2cm; 
+  }
+}
+</style>
+
+<style type="text/css">
+
+</style>
+
+<style type="text/css">
+
+</style>
+
+<style type="text/css">
+
+</style>
+
+
+</head>
+
+<body>
+
+<h1 id="toc_0">Twist And Shout</h1>
+
+<p><img src="https://media.discordapp.net/attachments/798837009836671056/851854122386980924/Twist_and_shout.png?width=982&amp;height=1170" alt="Problem Statement"></p>
+
+<div><pre class="line-numbers"><code class="language-python">from secret import flag
+import os  
+import random
+
+state_len = 624*4
+right_pad = random.randint(0,state_len-len(flag))
+left_pad = state_len-len(flag)-right_pad
+state_bytes = os.urandom(left_pad)+flag+os.urandom(right_pad)
+state = tuple( int.from_bytes(state_bytes[i:i+4],&#39;big&#39;) for i in range(0,state_len,4) )
+random.setstate((3,state+(624,),None))
+outputs = [random.getrandbits(32) for i in range(624)]
+print(*outputs,sep=&#39;\n&#39;)</code></pre></div>
+
+<p><em>challenge.py, the source code.</em>  </p>
+
+<h2 id="toc_1">Goal</h2>
+
+<p>Looking at the code, we can see that after some intial padding, the flag is used as the &ldquo;state&rdquo; for the random number generation. Therefore, if we are able to recover the state used to generate the numbers provided in output, we will have recovered the flag. </p>
+
+<p>The main vulnerability in this is the provision of 624 consecutive bytes created by the <code>random.getrandbits()</code> method. To understand why, we must first understand the algorithm used by Python&rsquo;s random library, the Mersenne Twister. </p>
+
+<h2 id="toc_2">Mersenne Twister</h2>
+
+<p>The standardised version of Mersenne Twister used by Python is MT19937, which gets its name from its period (the number of numbers the algorithm generates before it loops) which is the Mersenne Prime \(2^{19937}-1\). However, this does not mean we need \(2^{19937}-1\) consecutive values to reverse the algorithm. </p>
+
+<p>The algorithm stores an array of integers (this can be accessed by <code>random.getstate()</code>) and dispenses them one by one as requested. This number alone would not be random enough however, and thus an additional step called tempering is applied. In the case of MT19937, the array stores 624 32-bit integers. Once the array is exhausted, a new array is then created based on the old state. This step is called twisting. </p>
+
+<p>The first part we must undo is tempering. </p>
+
+<h3 id="toc_3">Tempering</h3>
+
+<p>The tempering process needs to be quick and easy for a computer to perform and thus is done using a series of bitwise operations. </p>
+
+<div><pre class="line-numbers"><code class="language-python">def temper(y):
+    y ^= y &gt;&gt; 11
+    y ^= (y &lt;&lt; 7) &amp; 0x9D2C5680
+    y ^= (y &lt;&lt; 15) &amp; 0xEFC60000
+    y ^= y &gt;&gt; 18
+    return y &amp; 0xFFFFFFFF</code></pre></div>
+
+<p><em>Python function for the tempering process</em></p>
+
+<p>The easiest way to understand what is happening is to follow along with an example.</p>
+
+<p>Let <code>y = 11011110101011011011111011101111</code>.</p>
+
+<h5 id="toc_4">Step 1:</h5>
+
+<p>In the first step we do a bitwise xor on <code>y</code> and <code>y &gt;&gt; 11</code>  </p>
+
+<div><pre class="line-numbers"><code class="language-none">11011110101011011011111011101111 XOR
+00000000000110111101010110110111 
+=
+11011110101101100110101101011000</code></pre></div>
+
+<h4 id="toc_5">Step 2:</h4>
+
+<p>In step 2, <code>y</code> is bit shifted to the left, and then a bitwise and is performed with <code>0x9D2C5680</code>. This is then xored with the previous value of <code>y</code>.</p>
+
+<div><pre class="line-numbers"><code class="language-none">01011011001101011010110000000000 AND
+10011101001011000101011010000000
+=
+00011001001001000000010000000000 XOR
+11011110101101100110101101011000
+=
+11000111100100100110111101011000</code></pre></div>
+
+<h4 id="toc_6">Step 3:</h4>
+
+<p>This step is similar to step 2, but with different values.</p>
+
+<div><pre class="line-numbers"><code class="language-none">00110111101011000000000000000000 AND
+11101111110001100000000000000000
+=
+00100111100001000000000000000000 XOR
+01001111101111100010101101011000
+=
+11100000000101100110111101011000</code></pre></div>
+
+<h4 id="toc_7">Step 4:</h4>
+
+<p>This step is similar to step 1, but with different values. </p>
+
+<div><pre class="line-numbers"><code class="language-none">11100000000101100110111101011000 XOR
+00000000000000000011100000000101
+=
+11100000000101100101011101011101</code></pre></div>
+
+<p>Which is our tempered value of <code>y</code>.<br>
+<code>y_tempered = 11100000000101100101011101011101</code></p>
+
+<h3 id="toc_8">Untempering</h3>
+
+<p>To reverse tempering, we must do these steps in reverse but with minor changes. I made some small changes to the method I found from <a href="https://nayak.io/posts/mersenne_twister/">this page</a> which outlined the reversal method in detail. 
+Let&rsquo;s follow along with the same example to see if we can get our original value back again.</p>
+
+<h4 id="toc_9">Step 4:</h4>
+
+<p>Step 4 can be reversed by simply redoing step 4 of the tempering process. This is because <code>(a XOR b) XOR b = a</code>. Moreover, after the bitshift, the first 18 bits of the Step 3 value of <code>y</code> are preserved. Thus, when the bitshift occurs again, the bits we need are still there. </p>
+
+<div><pre class="line-numbers"><code class="language-none">11100000000101100101011101011101 XOR
+00000000000000000001001010001110
+=
+11100000000101100110111101011000</code></pre></div>
+
+<h4 id="toc_10">Step 3:</h4>
+
+<p>Similarly, step 3 can be reversed by doing step 3 in the tempering process again.</p>
+
+<div><pre class="line-numbers"><code class="language-none">00110111101011000000000000000000 AND
+11101111110001100000000000000000
+=
+00100111100001000000000000000000 XOR
+01001010001110100010101101011000
+=
+11000111100100100110111101011000</code></pre></div>
+
+<h4 id="toc_11">Step 2:</h4>
+
+<p>The intuition behind this step is explained best in the page linked above. I found a <a href="https://github.com/kmyk/mersenne-twister-predictor/blob/master/mt19937predictor.py">github repo</a> which was able to implement that in 1 step avoiding the need for a loop. Showing all the steps for the process will be long, so I&rsquo;ll just show the output of this step. The process in code is:<br>
+<code>y ^= ((y &lt;&lt; 7) &amp; 0x9D2C5680) ^ ((y &lt;&lt; 14) &amp; 0x94284000) ^ ((y &lt;&lt; 21) &amp; 0x14200000) ^ ((y &lt;&lt; 28) &amp; 0x10000000)</code></p>
+
+<p>The output when run with our previous value is <code>11011110101101100110101101011000</code>.</p>
+
+<h4 id="toc_12">Step 1:</h4>
+
+<p>In step 1 of the tempering process, there is a bitshift to the right by 11. Since 11 is less than half of 32, if we just repeat this, we&rsquo;re going to run into an issue. </p>
+
+<div><pre class="line-numbers"><code class="language-none">11011110101101100110101101011000 XOR
+00000000000110111101011011001101
+=
+11011110101011011011110110010101</code></pre></div>
+
+<p>If we compare this to our untempered value (<code>11011110101011011011111011101111</code>), we see that only the first 22 bits are correct. To solve this we can simply xor once more but this time with our original value bitshifted by 22 bits. </p>
+
+<div><pre class="line-numbers"><code class="language-none">11011110101011011011110110010101 XOR
+00000000000000000000001101111010
+=
+11011110101011011011111011101111</code></pre></div>
+
+<p>This is our untempered value, so we have undone the process!</p>
+
+<h2 id="toc_13"></h2>
+
+<p>In code, this process can be done in just 4 lines.</p>
+
+<div><pre class="line-numbers"><code class="language-python">def untemper(y):
+    y ^= (y &gt;&gt; 18)
+    y ^= (y &lt;&lt; 15) &amp; 0xEFC60000
+    y ^= ((y &lt;&lt; 7) &amp; 0x9D2C5680) ^ ((y &lt;&lt; 14) &amp; 0x94284000) ^ ((y &lt;&lt; 21) &amp; 0x14200000) ^ ((y &lt;&lt; 28) &amp; 0x10000000)
+    y ^= (y &gt;&gt; 11) ^ (y &gt;&gt; 22)
+    return y</code></pre></div>
+
+<p>Thus, we can untemper all the values and derive the seed &hellip; or can we? Turns out, when <code>random.setstate()</code> is called, it does two things. It sets the internal state array, but it also sets the index (i.e which position in that array the randomised values should start from). In the code above, this is done by adding <code>(625, )</code> to the array. However, this is greater than 624, which signals to the module that it is time to generate a new state by twisting. Thus, simply untempering the values isn&rsquo;t enough. </p>
+
+<h3 id="toc_14">Twisting</h3>
+
+<p>The twist is also done using bitwise operations, but it is slightly more complex than tempering as it requires more numbers. </p>
+
+<div><pre class="line-numbers"><code class="language-python">def twist():
+    for i in range(624):
+        x = state[i] &amp; 0x80000000 | (state[(i+1) % 624] &amp; 0x7FFFFFFF)
+        xA = x &gt;&gt; 1
+        if x % 2 != 0:
+            xA ^= 0x9908B0DF
+        state[i] = state[(i + 397) % 624] ^ xA
+    index = 0</code></pre></div>
+
+<p><em>the Python code for the twist</em></p>
+
+<p>For each element, <code>i</code>, in the state, the following operations are carried out:</p>
+
+<ol>
+<li>The first bit of <code>state[i]</code> and the last 31 bits of <code>state[i+1]</code> are combined to make a new number, <code>x</code>. </li>
+<li>This number is then bitshifted once to the right to get <code>xA</code>. </li>
+<li>If <code>x</code> is odd, <code>xA</code> is xored with <code>10011001000010001011000011011111</code>. (note that the first bit of this is 1)</li>
+<li><code>state[i]</code> is assigned <code>xA</code> xored with <code>state[(i+397)%624]</code>.</li>
+</ol>
+
+<h3 id="toc_15">Untwisting</h3>
+
+<p>For untwisting, I found <a href="https://jazzy.id.au/2010/09/25/cracking_random_number_generators_part_4.html">this page</a>. The process can be broken into the following steps:</p>
+
+<ol>
+<li>Recover <code>xA</code> by xoring <code>state[i]</code> with <code>state[(i+397)%624]</code>.</li>
+<li>Figure out whether <code>x</code> was odd or even by checking the value of its first bit. This will be 1 if <code>x</code> was odd. This is because of the xor operation in step 3 of twisting. If <code>x</code> was odd, then xor <code>xA</code> with <code>10011001000010001011000011011111</code>.</li>
+<li>Get <code>x</code> from <code>xA</code> by bitshifting and fix the last bit based on whether <code>x</code> was odd or not. </li>
+</ol>
+
+<p>This would get us <code>x</code>, but remember that only the first bit of <code>x</code> is from <code>state[i]</code>. The rest are from <code>state[i+1]</code>. This however is an easy problem to fix and can be fixed by repeating the aforementioned 3 steps for <code>state[i-1]</code> as well and taking the needed bits. Another thing to note is that the untwisting process has to be done starting at <code>state[623]</code> because it&rsquo;s in the reverse order of twisting. </p>
+
+<p>Putting this into code gives the following:</p>
+
+<div><pre class="line-numbers"><code class="language-python">def untwist():
+    for i in range(623, -1, -1):
+        tmp = state[i]
+        tmp ^= state[(i + 397) % 624]
+        if (tmp &amp; 0x80000000) == 0x80000000:
+            tmp ^= 0x9908B0DF
+        result = (tmp &lt;&lt; 1) &amp; 0x80000000
+
+        tmp = state[(i - 1 + 624) % 624] 
+        tmp ^= state[(i - 1 + 397) % 624]
+        if (tmp &amp; 0x80000000) == 0x80000000:
+            tmp ^= 0x9908B0DF
+            result |= 1
+        result |= (tmp &lt;&lt; 1) &amp; 0x7fffffff
+        state[i] = result</code></pre></div>
+
+<h2 id="toc_16">Solving The Challenge</h2>
+
+<p>Putting all of this together gets us the following Python script. I have truncated the outputs array because it would get too big otherwise. </p>
+
+<div><pre class="line-numbers"><code class="language-python">state = [0]*624
+
+def untemper(y):
+    y ^= (y &gt;&gt; 18)
+    y ^= (y &lt;&lt; 15) &amp; 0xEFC60000
+    y ^= ((y &lt;&lt; 7) &amp; 0x9D2C5680) ^ ((y &lt;&lt; 14) &amp; 0x94284000) ^ ((y &lt;&lt; 21) &amp; 0x14200000) ^ ((y &lt;&lt; 28) &amp; 0x10000000)
+    y ^= (y &gt;&gt; 11) ^ (y &gt;&gt; 22)
+    return y
+
+def untwist():
+    for i in range(623, -1, -1):
+        tmp = state[i]
+        tmp ^= state[(i + 397) % 624]
+        if (tmp &amp; 0x80000000) == 0x80000000:
+            tmp ^= 0x9908B0DF
+        result = (tmp &lt;&lt; 1) &amp; 0x80000000
+
+        tmp = state[(i - 1 + 624) % 624] 
+        tmp ^= state[(i - 1 + 397) % 624]
+        if (tmp &amp; 0x80000000) == 0x80000000:
+            tmp ^= 0x9908B0DF
+            result |= 1
+        result |= (tmp &lt;&lt; 1) &amp; 0x7fffffff
+        state[i] = result
+
+def tobytes(n):
+    nhex = hex(n)[2:]
+    if len(nhex) % 2 == 1: nhex = &quot;0&quot; + nhex
+    split = [bytes.fromhex(nhex[i:i+2]) for i in range(0, len(nhex), 2)]
+    return b&quot;&quot;.join(split)
+
+outputs = [1309965781, 2649189939, 3508454978, 2632917993, 2284386715, 1373052604, 1193975626, 575882411, 105745903 ...]
+state = [untemper(i) for i in outputs]
+untwist()
+print(state[1])
+print(b&quot;&quot;.join([tobytes(i) for i in state]))</code></pre></div>
+
+<p>Running this on our numbers gets us a lot of gibberish. In between all that, is the flag we need. 
+<img src="https://media.discordapp.net/attachments/798837009836671056/851854059329028116/unknown.png?width=2160&amp;height=290" alt="The output">
+<code>zh3r0{7h3_fu7ur3_m1gh7_b3_c4p71v471ng_bu7_n0w_y0u_kn0w_h0w_t0_l00k_a7_7h3_p457}</code></p>
+
+<h2 id="toc_17">What I Learnt</h2>
+
+<p>This challenge allowed me to learn more about the inner working of the random module and also PRNGs in general. Moreover, it also taught me to never use the random module for cryptographic randomisation purposes. This is highlighted further in some of the other challenges in this CTF, that I unfortunately was not able to solve myself.</p>
+
+<h4 id="toc_18">Bibliography</h4>
+
+<p><a href="https://nayak.io/posts/mersenne_twister/">https://nayak.io/posts/mersenne_twister/</a><br>
+<a href="https://github.com/kmyk/mersenne-twister-predictor/blob/master/mt19937predictor.py">https://github.com/kmyk/mersenne-twister-predictor/blob/master/mt19937predictor.py</a><br>
+<a href="https://jazzy.id.au/2010/09/25/cracking_random_number_generators_part_4.html">https://jazzy.id.au/2010/09/25/cracking_random_number_generators_part_4.html</a><br>
+<a href="https://en.wikipedia.org/wiki/Mersenne_Twister">https://en.wikipedia.org/wiki/Mersenne_Twister</a></p>
+
+
+
+<script type="text/javascript">
+
+</script>
+
+<script type="text/javascript">
+
+</script>
+
+<script type="text/javascript">
+
+</script>
+
+<script type="text/javascript">
+
+</script>
+
+<script type="text/x-mathjax-config">
+
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+</body>
+
+</html>
