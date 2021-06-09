@@ -37,6 +37,7 @@
             <p>This was my first proper CTF, and it was a very fun experience. I was able to solve two challenges and learnt a lot in the process.</p>
             <hr/>
 
+            <!-- Heading, image, and source code-->
             <h2>Twist And Shout</h2>
             <img src="img/Twist_and_shout.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
             <figure class="figure">
@@ -69,17 +70,19 @@ print(*outputs,sep=&#39;\n&#39;)</code></pre>
             <p></p>
             <h4>Tempering</h4>
             <p>The tempering process needs to be quick and easy for a computer to perform and thus is done using a series of bitwise operations.</p>
+            <!-- Temper function -->
             <figure class="figure">
                 <div>
                     <pre id="code-block"><code>def temper(y):
-y ^= y &gt;&gt; 11
-y ^= (y &lt;&lt; 7) &amp; 0x9D2C5680
-y ^= (y &lt;&lt; 15) &amp; 0xEFC60000
-y ^= y &gt;&gt; 18
-return y &amp; 0xFFFFFFFF</code></pre>
+    y ^= y &gt;&gt; 11
+    y ^= (y &lt;&lt; 7) &amp; 0x9D2C5680
+    y ^= (y &lt;&lt; 15) &amp; 0xEFC60000
+    y ^= y &gt;&gt; 18
+    return y &amp; 0xFFFFFFFF</code></pre>
                 </div>
                 <figcaption class="figure-caption"><em>Tempering in Python code</em></figcaption>
             </figure>
+            <p></p>
             <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#tempering-example">Click here for a more in depth explanation!</button>
             <div id="tempering-example" class="collapse">
                 <p>Let <code id="inline-code">y = 11011110101011011011111011101111</code>.</p>
@@ -126,7 +129,7 @@ return y &amp; 0xFFFFFFFF</code></pre>
 11100000000101100101011101011101</code></pre>
                 </div>
 
-                <p>Which is our tempered value of <code id="inline-code">y</code>,<br> <code id="inline-code">y_tempered = 11100000000101100101011101011101</code></p>
+                <p>Which gives us our tempered value of <code id="inline-code">y</code>,<br> <code id="inline-code">11100000000101100101011101011101</code>.</p>
             </div>
         </div>
     </body>
