@@ -135,6 +135,7 @@ print(*outputs,sep=&#39;\n&#39;)</code></pre>
             <p></p>
             <h4>Untempering</h4>
             <p>The untempering process is largely the same as the tempering process albeit in reverse and with some small changes. I found a <a href="https://github.com/kmyk/mersenne-twister-predictor/blob/master/mt19937predictor.py">github repo</a> which had the code for untempering.</p>
+            <!-- Untemper function -->
             <figure class="figure">
                 <div>
                     <pre id="code-block"><code>def untemper(y):
@@ -144,6 +145,7 @@ print(*outputs,sep=&#39;\n&#39;)</code></pre>
     y ^= (y >> 11) ^ (y >> 22)
     return y</code></pre>
                 </div>
+                <figcaption class="figure-caption"><em>Untempering in Python code</em></figcaption>
             </figure>
             <p></p>
             <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#untempering-example">Click here for a more in depth explanation.</button>
@@ -191,6 +193,67 @@ print(*outputs,sep=&#39;\n&#39;)</code></pre>
                 </div>
                 <p>This is our untempered value, so we have undone the process!</p>
             </div>
+
+            <p></p>
+            <p>Thus, we can untemper all the values and derive the seed &hellip; or can we? Turns out, when <code id="inline-code">random.setstate()</code> is called, it does two things. It sets the internal state array, but it also sets the index (i.e which position in that array the randomised values should start from). In the code above, this is done by adding <code id="inline-code">(625, )</code> to the array. However, this is greater than 624, which signals to the module that it is time to generate a new state by twisting. Thus, simply untempering the values isn&rsquo;t enough.</p>
+
+            <p></p>
+            <h4>Twisting</h4>
+            <p>The twist is also done using bitwise operations, but it is slightly more complex than tempering as it requires more numbers from the state.</p>
+            <!-- Twisting function -->
+            <figure class="figure">
+                <div>
+                    <pre id="code-block"><code>def twist():
+    for i in range(624):
+        x = state[i] &amp; 0x80000000 | (state[(i+1) % 624] &amp; 0x7FFFFFFF)
+        xA = x &gt;&gt; 1
+        if x % 2 != 0:
+            xA ^= 0x9908B0DF
+        state[i] = state[(i + 397) % 624] ^ xA
+    index = 0</code></pre>
+                </div>
+                <figcaption class="figure-caption"><em>Twisting in Python code</em></figcaption>
+            </figure>
+            <p>For each element, <code id="inline-code">i</code>, in the state, the following operations are carried out:</p>
+            <ol>
+            <li>The first bit of <code id="inline-code">state[i]</code> and the last 31 bits of <code id="inline-code">state[i+1]</code> are combined to make a new number, <code id="inline-code">x</code>.</li>
+            <li>This number is then bitshifted once to the right to get <code id="inline-code">xA</code>. </li>
+            <li>If <code id="inline-code">x</code> is odd, <code id="inline-code">xA</code> is xored with <code id="inline-code">10011001000010001011000011011111</code>. (note that the first bit of this is 1)</li>
+            <li><code id="inline-code">state[i]</code> is assigned <code id="inline-code">xA</code> xored with <code id="inline-code">state[(i+397)%624]</code>.</li>
+            </ol>
+            <p>At the end, the index is reset which is incremented internally as more numbers are required.</p>
+
+            <p></p>
+            <h4>Untwisting</h4>
+            <p>For untwisting, I found <a href="https://jazzy.id.au/2010/09/25/cracking_random_number_generators_part_4.html">this page</a>. The process can be broken into the following steps:</p>
+            <ol>
+            <li>Recover <code id="inline-code">xA</code> by xoring <code id="inline-code">state[i]</code> with <code id="inline-code">state[(i+397)%624]</code>.</li>
+            <li>Figure out whether <code id="inline-code">x</code> was odd or even by checking the value of its first bit. This will be 1 if <code id="inline-code">x</code> was odd. This is because of the xor operation in step 3 of twisting. If <code id="inline-code">x</code> was odd, then xor <code id="inline-code">xA</code> with <code id="inline-code">10011001000010001011000011011111</code>.</li>
+            <li>Get <code id="inline-code">x</code> from <code id="inline-code">xA</code> by bitshifting and fix the last bit based on whether <code id="inline-code">x</code> was odd or not.</li>
+            </ol>
+            
+            <p>This would get us <code id="inline-code">x</code>, but remember that only the first bit of <code id="inline-code">x</code> is from <code id="inline-code">state[i]</code>. The rest are from <code id="inline-code">state[i+1]</code>. This however is an easy problem to fix and can be fixed by repeating the aforementioned 3 steps for <code id="inline-code">state[i-1]</code> as well and taking the needed bits. Another thing to note is that the untwisting process has to be done starting at <code id="inline-code">state[623]</code> because it&rsquo;s in the reverse order of twisting.</p>
+            <p>Putting this into code gives the following:</p>
+            <figure class="figure">
+                <div>
+                    <pre id="code-block"><code>def untwist():
+    for i in range(623, -1, -1):
+        tmp = state[i]
+        tmp ^= state[(i + 397) % 624]
+        if (tmp &amp; 0x80000000) == 0x80000000:
+            tmp ^= 0x9908B0DF
+        result = (tmp &lt;&lt; 1) &amp; 0x80000000
+
+        tmp = state[(i - 1 + 624) % 624] 
+        tmp ^= state[(i - 1 + 397) % 624]
+        if (tmp &amp; 0x80000000) == 0x80000000:
+            tmp ^= 0x9908B0DF
+            result |= 1
+        result |= (tmp &lt;&lt; 1) &amp; 0x7fffffff
+        state[i] = result</code></pre>
+                </div>
+                <figcaption class="figure-caption">Untwisting in Python</figcaption>
+            </figure>
         </div>
     </body>
 </html>
