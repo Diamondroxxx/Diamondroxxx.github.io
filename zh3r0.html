@@ -83,7 +83,7 @@ print(*outputs,sep=&#39;\n&#39;)</code></pre>
                 <figcaption class="figure-caption"><em>Tempering in Python code</em></figcaption>
             </figure>
             <p></p>
-            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#tempering-example">Click here for a more in depth explanation!</button>
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#tempering-example">Click here for a more in depth explanation.</button>
             <div id="tempering-example" class="collapse">
                 <p>Let <code id="inline-code">y = 11011110101011011011111011101111</code>.</p>
 
@@ -130,6 +130,66 @@ print(*outputs,sep=&#39;\n&#39;)</code></pre>
                 </div>
 
                 <p>Which gives us our tempered value of <code id="inline-code">y</code>, <code id="inline-code">11100000000101100101011101011101</code>.</p>
+            </div>
+
+            <p></p>
+            <h4>Untempering</h4>
+            <p>The untempering process is largely the same as the tempering process albeit in reverse and with some small changes. I found a <a href="https://github.com/kmyk/mersenne-twister-predictor/blob/master/mt19937predictor.py">github repo</a> which had the code for untempering.</p>
+            <figure class="figure">
+                <div>
+                    <pre id="code-block"><code>def untemper(y):
+    y ^= (y >> 18)
+    y ^= (y << 15) & 0xEFC60000
+    y ^= ((y << 7) & 0x9D2C5680) ^ ((y << 14) & 0x94284000) ^ ((y << 21) & 0x14200000) ^ ((y << 28) & 0x10000000)
+    y ^= (y >> 11) ^ (y >> 22)
+    return y</code></pre>
+                </div>
+            </figure>
+            <p></p>
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#untempering-example">Click here for a more in depth explanation.</button>
+            <div id="untempering-example" class="collapse">
+                <p><a href="https://nayak.io/posts/mersenne_twister/">This page</a> explains the procedure well. To show how it works, I'll be continuing with the example from the previous example.</p>
+                <h4>Step 4:</h4>
+                <p>Step 4 can be reversed by simply redoing step 4 of the tempering process. This is because <code id="inline-code">(a XOR b) XOR b = a</code>. Moreover, after the bitshift, the first 18 bits of the Step 3 value of <code id="inline-code">y</code> are preserved. Thus, when the bitshift occurs again, the bits we need are still there.</p>
+                <div>
+                    <pre id="code-block"><code>11100000000101100101011101011101 XOR
+00000000000000000001001010001110
+=
+11100000000101100110111101011000</code></pre>
+                </div>
+
+                <h4>Step 3:</h4>
+                <p>Similarly, step 3 can be reversed by doing step 3 in the tempering process again.</p>
+                <div>
+                    <pre id="code-block"><code>00110111101011000000000000000000 AND
+11101111110001100000000000000000
+=
+00100111100001000000000000000000 XOR
+01001010001110100010101101011000
+=
+11000111100100100110111101011000</code></pre>
+                </div>
+
+                <h4>Step 2:</h4>
+                <p>This step is a little bit more complicated but it essentially relies on repeating step 2 of the tempering process with the application of bitmasks. The reason for this is that is because each tome only gets us 7 bits at a time. The github repo I used for the code did this all in one step, while the page I linkes above which has the explanation did it using a loop. After applying that step, this is the result: <code id="inline-code">11011110101101100110101101011000</code>.</p>
+
+                <h4>Step 1:</h4>
+                <p>In step 1 of the tempering process, there is a bitshift to the right by 11. Since 11 is less than half of 32, if we just repeat this, we’re going to run into an issue.</p>
+                <div>
+                    <pre id="code-block"><code>11011110101101100110101101011000 XOR
+00000000000110111101011011001101
+=
+11011110101011011011110110010101</code></pre>
+                </div>
+                    
+                <p>If we compare this to our untempered value (<code id="inline-code">11011110101011011011111011101111</code>), we see that only the first 22 bits are correct. To solve this we can simply xor once more but this time with our original value bitshifted by 22 bits. </p>
+                    
+                <div><pre id="code-block"><code>11011110101011011011110110010101 XOR
+00000000000000000000001101111010
+=
+11011110101011011011111011101111</code></pre>
+                </div>
+                <p>This is our untempered value, so we have undone the process!</p>
             </div>
         </div>
     </body>
