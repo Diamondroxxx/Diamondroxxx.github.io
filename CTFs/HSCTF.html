@@ -38,8 +38,12 @@
           <p>This CTF went great and my team placed 57th overall. I solved a lot of challenges, some alone and some with the help of my team. Overall I had a lot of fun.</p>
           <hr/>
 
-          <h2>Algo: Not Really Math</h2>
-          <img src="../img/HSCTF/not-really-math.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
+          <h2>Algo: Not Really Math <small>346 solves / 319 points</small></h2>
+          <figure class="figure">
+            <img src="../img/HSCTF/not-really-math.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
+            <figcaption class="figure-caption"><em>The problem statement</em></figcaption>
+          </figure>
+          <p></p>
           <p>This was an easy solution, requiring me to simply parse the input string and evaluate it.</p>
           <pre id="code-block"><code class="language-python">from pwn import *
 
@@ -61,6 +65,46 @@ for i in range(50):
     print(q) # To check progress and collect flag
     r.sendlineafter(": ", str(solve(str(q)[2:-1])))</code></pre>
           <hr/>
+
+          <h2>Algo: Extended Fibonacci Sequence <small>251 solves / 379 points</small></h2>
+          <figure class="figure">
+            <img src="../img/HSCTF/ext-fib-1.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
+            <figcaption class="figure-caption">The problem statement</figcaption>
+          </figure>
+          <p></p>
+          <p>This was also quite easy, as with the use of the <code id="inline-code">lru_cache()</code> decorator the Fibonacci number generation was simple enough.</p>
+          <pre id="code-block"><code class="language-python">from functools import lru_cache
+from pwn import *
+
+@lru_cache()
+def fib(n):
+    if n == 0 or n == 1:
+        return n
+    return fib(n-1) + fib(n-2)
+
+@lru_cache()
+def s(n):
+    if n == 0:
+        return 0
+    return int(str(s(n-1)) + str(fib(n)))
+
+def s_sum(n):
+    total = 0
+    for i in range(1, n+1):
+        total += s(i)
+    return str(int(str(total)[-11:]))
+
+r = remote("extended-fibonacci-sequence.hsc.tf", 1337)
+_ = r.recvline()
+
+for i in range(50):
+    line = r.recvline(keepends=False)
+    print(line)
+    n = int(str(line)[2:-1])
+    r.sendlineafter(": ", str(s_sum(n)))</code></pre>
+          <hr/>
+
+
         </div>
     </body>
 </html>
