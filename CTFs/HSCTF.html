@@ -25,7 +25,7 @@
                   <a class="dropdown-toggle" data-toggle="dropdown" href="#">CTFs
                   <span class="caret"></span></a>
                   <ul class="dropdown-menu">
-                    <li><a href="/CTFS/zh3r0.html">zh3r0</a></li>
+                    <li><a href="/CTFs/zh3r0.html">zh3r0</a></li>
                     <li><a href="/CTFs/HSCTF.html">HSCTF</a></li>
                   </ul>
                 </li>
@@ -33,9 +33,34 @@
             </div>
         </nav>
 
-        <div class="container" style="margin-top:50px;">
-          <h1>Hello, World!</h1>
-          <p>This page is still being worked on.</p>
+        <div class="container" style="margin-top:50px; background-color: rgba(255, 255, 255, .01); width: 75vw">
+          <h1>HSCTF</h1>
+          <p>This CTF went great and my team placed 57th overall. I solved a lot of challenges, some alone and some with the help of my team. Overall I had a lot of fun.</p>
+          <hr/>
+
+          <h2>Algo: Not Really Math</h2>
+          <img src="../img/HSCTF/not-really-math.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
+          <p>This was an easy solution, requiring me to simply parse the input string and evaluate it.</p>
+          <pre id="code-block"><code>from pwn import *
+
+def solve(question: str):
+    mults = question.split("m")
+    for i in range(len(mults)):
+        m = mults[i]
+        m = "(" + m + ")"
+        m = m.replace("a", "+")
+        mults[i] = m
+    q = "*".join(mults)
+    ans = eval(q) % (2**32 - 1)
+    return ans
+
+r = remote("not-really-math.hsc.tf", 1337)
+_ = r.recvline()
+for i in range(50):
+    q = r.recvline(keepends=False)
+    print(q) # To check progress and collect flag
+    r.sendlineafter(": ", str(solve(str(q)[2:-1])))</code></pre>
+          <hr/>
         </div>
     </body>
 </html>
