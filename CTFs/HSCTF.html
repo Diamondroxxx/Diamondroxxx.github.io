@@ -48,11 +48,11 @@
           <pre id="code-block"><code class="language-python">from pwn import *
 
 def solve(question: str):
-    mults = question.split("m")
+    mults = question.split("m") # split by multiplications as they need to be performed after
     for i in range(len(mults)):
         m = mults[i]
         m = "(" + m + ")"
-        m = m.replace("a", "+")
+        m = m.replace("a", "+") # place brackets around additions to calculate them first
         mults[i] = m
     q = "*".join(mults)
     ans = eval(q) % (2**32 - 1)
@@ -60,7 +60,7 @@ def solve(question: str):
 
 r = remote("not-really-math.hsc.tf", 1337)
 _ = r.recvline()
-for i in range(50):
+for i in range(50): # Unsure of how many so 50 is a large enough buffer
     q = r.recvline(keepends=False)
     print(q) # To check progress and collect flag
     r.sendlineafter(": ", str(solve(str(q)[2:-1])))</code></pre>
@@ -72,8 +72,8 @@ for i in range(50):
             <figcaption class="figure-caption">The problem statement</figcaption>
           </figure>
           <p></p>
-          <p>This was also quite easy, as with the use of the <code id="inline-code">lru_cache()</code> decorator the Fibonacci number generation was simple enough.</p>
-          <pre id="code-block"><code class="language-python">from functools import lru_cache
+          <p>This was also quite easy, as with the use of the <code id="inline-code">lru_cache()</code> decorator the Fibonacci number generation was quick enough.</p>
+          <pre id="code-block"><code class="language-python">from functools import lru_cache # Handles memoization for faster fib
 from pwn import *
 
 @lru_cache()
@@ -104,7 +104,49 @@ for i in range(50):
     r.sendlineafter(": ", str(s_sum(n)))</code></pre>
           <hr/>
 
+          <h2>Algo: Extended Fibonacci Sequence 2 <small>186 solves / 417 points</small></h2>
+          <figure class="figure">
+            <img src="../img/HSCTF/ext-fib-2.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
+            <figcaption class="figure-caption">The problem statement</figcaption>
+          </figure>
+          <p></p>
+          <p>This problem was virtually identical to Extended Fibonacci Sequence 1 although the catch was that the remote server required much faster inputs. My script for the previous challenge was already fast enough however, so with minor modification for the new specifications it was ready to be used.</p>
+          <pre id="code-block"><code class="language-python">from functools import lru_cache
+from pwn import *
 
+@lru_cache()
+def fib(n):
+    if n == 0:
+        return 4
+    if n == 1:
+        return 5
+    return fib(n-1) + fib(n-2)
+
+@lru_cache()
+def s(n):
+    if n == 0:
+        return fib(0)
+    return s(n-1) + fib(n)
+
+def s_sum(n):
+    total = 0
+    for i in range(n+1):
+        total += s(i)
+    return str(int(str(total)[-10:]))
+
+r = remote("extended-fibonacci-sequence-2.hsc.tf", 1337)
+print(r.recvline())
+
+
+for i in range(50):
+    print(r.recvline())
+    print(r.recvline())
+    line = r.recvline(keepends=False)
+    print(line)
+    n = int(str(line)[2:-1])
+    r.sendline(str(s_sum(n)))
+    print(r.recvline())</code></pre>
+            <hr/>
         </div>
     </body>
 </html>
