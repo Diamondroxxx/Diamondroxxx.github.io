@@ -150,7 +150,7 @@ for i in range(50):
 
             <h2>Algo: Hopscotch <small>151 solves / 436 points</small></h2>
             <figure class="figure">
-              <img src="../img/HSCTF/hopscotch.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
+              <img src="../img/HSCTF/hopscotch.png" style="height: 30vh; min-height: 100px; display: block; margin-left: auto; margin-right: auto;">
               <figcaption class="figure-caption"><em>The problem statement</em></figcaption>
             </figure>
             <p></p>
@@ -175,6 +175,64 @@ for i in range(50):
     print(line)
     n = int(str(line)[2:-1])
     r.sendlineafter(": ", str(fib(n) % 10000))</code></pre>
+            <hr/>
+
+            <h2>Algo: Class Meets <small>116 solves / 454 points</small></h2>
+            <figure class="figure">
+              <img src="../img/HSCTF/class-meets.png" style="height: 80vh; min-height: 450px; display: block; margin-left: auto; margin-right: auto;">
+              <figcaption class="figure-caption"><em>The problem statement</em></figcaption>
+            </figure>
+            <p></p>
+            <p>To solve this challenge I simply made a table with the days each student was going to be in person or virtual and then counted each meet.</p>
+            <pre id="code-block"><code class="language-python">from pwn import *
+
+def populate_table(in_person, virtual, end_month, end_day):
+    timetable = [0]*(end_month*30 + end_day + 1) # +1 because counting is not zero indexed
+    i_counter, v_counter = in_person, virtual
+    for i in range(len(timetable)):
+        if i % 7 == 5 or i % 7 == 6: # accounts for weekends
+            continue
+        if i_counter: # checks if any more in-person days are remaining
+            timetable[i] = "i"
+            i_counter -= 1 # reduce remaining in person days by 1
+            continue
+        if v_counter > 1: # checks if any more virtual days are remaining
+            timetable[i] = "v"
+            v_counter -= 1 # reduce remaining virtual days by 1
+            continue
+        timetable[i] = "v"
+        i_counter, v_counter = in_person, virtual # reset counters
+    return timetable
+
+def count_meets(stu1, stu2, start_month, start_day):
+    meets = 0
+    for i in range(start_month*30 + start_day, len(stu1)):
+        if stu1[i] !=0 and stu1[i] == stu2[i]: # if not a weekend and both meet
+            meets += 1
+    return meets
+
+r = remote("class-meets.hsc.tf", 1337)
+print(r.recvline())
+
+for i in range(15):
+    print(r.recvline())
+    print(r.recvline())
+    start = str(r.recvline())[2:-3].split(" ")
+    end = str(r.recvline())[2:-3].split(" ")
+    stu1 = str(r.recvline())[2:-3].split(" ")
+    stu2 = str(r.recvline())[2:-3].split(" ")
+    print(start, end, stu1, stu2, sep="\n")
+    s_month, s_day = [int(i[1:]) for i in start]
+    e_month, e_day = [int(i[1:]) for i in end]
+    i1, v1 = [int(i[1:]) for i in stu1]
+    i2, v2 = [int(i[1:]) for i in stu2]
+    student1 = populate_table(i1, v1, e_month, e_day)
+    student2 = populate_table(i2, v2, e_month, e_day)
+    meets = count_meets(student1, student2, s_month, s_day)
+    #print(student1, student2, meets, sep="\n")
+    r.sendline(str(meets))
+    r.recvline()
+print(r.recvall())</code></pre>
             <hr/>
 
             
