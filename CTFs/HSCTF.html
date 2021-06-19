@@ -41,7 +41,7 @@
           <h2>Algo: Not Really Math</h2>
           <img src="../img/HSCTF/not-really-math.png" style="height: 70vh; min-height: 300px; display: block; margin-left: auto; margin-right: auto;">
           <p>This was an easy solution, requiring me to simply parse the input string and evaluate it.</p>
-          <pre id="code-block"><code>from pwn import *
+          <pre id="code-block"><code class="language-python">from pwn import *
 
 def solve(question: str):
     mults = question.split("m")
